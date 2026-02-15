@@ -1,8 +1,8 @@
-﻿using Dapper;
+using Dapper;
 using MediatR;
 using StargateAPI.Business.Data;
-using StargateAPI.Business.Dtos;
-using StargateAPI.Controllers;
+using StargateAPI.Domain;
+using StargateAPI.Domain.Dtos;
 
 namespace StargateAPI.Business.Queries
 {

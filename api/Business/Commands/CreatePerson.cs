@@ -1,8 +1,8 @@
-﻿using MediatR;
+using MediatR;
 using MediatR.Pipeline;
 using Microsoft.EntityFrameworkCore;
 using StargateAPI.Business.Data;
-using StargateAPI.Controllers;
+using StargateAPI.Domain;
 
 namespace StargateAPI.Business.Commands
 {
