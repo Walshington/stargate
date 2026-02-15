@@ -1,0 +1,35 @@
+# Build results
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.user
+*.userosscache
+*.suo
+*.cache
+
+# Local SQLite DB (optional: remove this line if you want to commit starbase.db)
+*.db
+*.db-shm
+*.db-wal
+
+# User secrets (stored outside repo)
+secrets.json
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Misc
+*.log
+*.vspscc
+*.vssscc
