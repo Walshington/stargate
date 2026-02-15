@@ -30,11 +30,11 @@ Controllers do **not** reference handlers or `StargateContext` directly. Adding 
 
 | Area | Purpose |
 |------|--------|
+| **Domain/** | Shared API contracts: `BaseResponse`, DTOs (e.g. `PersonAstronaut` under `Domain/Dtos/`). No dependencies on Controllers or Business. |
 | **Controllers/** | HTTP only: routing, `Send(request)`, `GetResponse(result)`. No business or data logic. |
 | **Business/Data** | EF Core `StargateContext`, entities (`Person`, `AstronautDetail`, `AstronautDuty`), migrations. |
 | **Business/Queries** | Read operations: request + handler + result type (e.g. `GetPersonByName`, `GetPeople`, `GetAstronautDutiesByName`). |
 | **Business/Commands** | Write operations: request + optional pre-processors + handler + result (e.g. `CreatePerson`, `CreateAstronautDuty`). |
-| **Business/Dtos** | Data transfer shapes for API responses (e.g. `PersonAstronaut`), not raw entities. |
 
 ---
 
@@ -99,6 +99,6 @@ dotnet run
 ## Guidance for agents
 
 - **Follow existing patterns:** New use cases = new request + handler (and result type). Controllers only `Send` and `GetResponse`. Don’t put business or data access in controllers.
-- **Where to add code:** New queries → `Business/Queries/`. New commands → `Business/Commands/`. New response shapes → extend `BaseResponse` or add DTOs under `Business/Dtos/`. New endpoints → add actions to the appropriate controller and a corresponding request/handler.
+- **Where to add code:** New queries → `Business/Queries/`. New commands → `Business/Commands/`. New response shapes → extend `BaseResponse` or add DTOs under `Domain/Dtos/`. New endpoints → add actions to the appropriate controller and a corresponding request/handler.
 - **Testing:** Controllers can be tested by mocking `IMediator`. Handlers can be tested in isolation with a real or fake `StargateContext`. The MediatR split is intended to make both easy.
 - **Frontend:** An Angular frontend is planned but not in the repo yet. Do not assume or create frontend paths unless the user asks for them.

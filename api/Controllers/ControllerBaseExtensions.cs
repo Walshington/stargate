@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using StargateAPI.Domain;
 
 namespace StargateAPI.Controllers
 {
