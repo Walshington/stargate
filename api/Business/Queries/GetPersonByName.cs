@@ -3,6 +3,7 @@ using MediatR;
 using StargateAPI.Business.Data;
 using StargateAPI.Domain;
 using StargateAPI.Domain.Dtos;
+using StargateAPI.Domain.Exceptions;
 
 namespace StargateAPI.Business.Queries
 {
@@ -25,10 +26,11 @@ namespace StargateAPI.Business.Queries
 
             var query = $"SELECT a.Id as PersonId, a.Name, b.CurrentRank, b.CurrentDutyTitle, b.CareerStartDate, b.CareerEndDate FROM [Person] a LEFT JOIN [AstronautDetail] b on b.PersonId = a.Id WHERE '{request.Name}' = a.Name";
 
-            var person = await _context.Connection.QueryAsync<PersonAstronaut>(query);
+            PersonAstronaut? person = await _context.Connection.QueryFirstOrDefaultAsync<PersonAstronaut>(query);
+            if (person is null)
+                throw new NotFoundException("Person not found");
 
-            result.Person = person.FirstOrDefault();
-
+            result.Person = person;
             return result;
         }
     }

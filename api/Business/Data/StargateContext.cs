@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
 using System.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace StargateAPI.Business.Data
 {
