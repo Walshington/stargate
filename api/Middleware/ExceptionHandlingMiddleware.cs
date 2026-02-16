@@ -47,11 +47,9 @@ public class ExceptionHandlingMiddleware
         else
             _logger.LogWarning("Client error ({StatusCode}): {Message}", (int)statusCode, exception.Message);
 
-        /* Create the response */
         BaseResponse response = new BaseResponse
         {
             Success = false,
-            Message = errorDetail.Message,
             ResponseCode = (int)statusCode,
             Error = errorDetail
         };
