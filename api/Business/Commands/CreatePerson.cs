@@ -3,6 +3,7 @@ using MediatR.Pipeline;
 using Microsoft.EntityFrameworkCore;
 using StargateAPI.Business.Data;
 using StargateAPI.Domain;
+using StargateAPI.Domain.Exceptions;
 
 namespace StargateAPI.Business.Commands
 {
@@ -22,7 +23,7 @@ namespace StargateAPI.Business.Commands
         {
             var person = _context.People.AsNoTracking().FirstOrDefault(z => z.Name == request.Name);
 
-            if (person is not null) throw new BadHttpRequestException("Bad Request");
+            if (person is not null) throw new BadRequestException("Person already exists");
 
             return Task.CompletedTask;
         }

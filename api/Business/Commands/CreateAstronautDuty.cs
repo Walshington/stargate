@@ -57,7 +57,7 @@ namespace StargateAPI.Business.Commands
 
             var person = await _context.Connection.QueryFirstOrDefaultAsync<Person>(query);
             if (person is null)
-                throw new BadHttpRequestException("Bad Request");
+                throw new NotFoundException("Person not found");
 
             query = $"SELECT * FROM [AstronautDetail] WHERE {person.Id} = PersonId";
 
