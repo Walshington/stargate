@@ -1,3 +1,4 @@
+using System.Net;
 using MediatR;
 using MediatR.Pipeline;
 using Microsoft.EntityFrameworkCore;
@@ -60,6 +61,7 @@ namespace StargateAPI.Business.Commands
 
             return new CreatePersonResult()
             {
+                ResponseCode = (int)HttpStatusCode.Created,
                 Person = new PersonAstronaut
                 {
                     PersonId = newPerson.Id,
