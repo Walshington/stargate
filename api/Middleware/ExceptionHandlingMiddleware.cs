@@ -28,44 +28,39 @@ public class ExceptionHandlingMiddleware
         }
     }
 
+    /* Handle the exception and return the appropriate response */
     private async Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
-        var (statusCode, errorCode, details) = exception switch
+        /* Get the status code and error detail based on the exception */
+        var (statusCode, errorDetail) = exception switch
         {
-            NotFoundException => (HttpStatusCode.NotFound, "NOT_FOUND", null as string),
-            BadRequestException => (HttpStatusCode.BadRequest, "BAD_REQUEST", null as string),
-            BadHttpRequestException => (HttpStatusCode.BadRequest, "BAD_REQUEST", null as string),
-            _ => (HttpStatusCode.InternalServerError, "INTERNAL_ERROR", $"Exception type: {exception.GetType().Name}")
+            NotFoundException => (HttpStatusCode.NotFound, ErrorDetail.Create("NOT_FOUND", exception.Message, null)),
+            BadRequestException => (HttpStatusCode.BadRequest, ErrorDetail.Create("BAD_REQUEST", exception.Message, null)),
+            BadHttpRequestException => (HttpStatusCode.BadRequest, ErrorDetail.Create("BAD_REQUEST", exception.Message, null)),
+            _ => (HttpStatusCode.InternalServerError, ErrorDetail.Create("INTERNAL_ERROR", exception.Message, $"Exception type: {exception.GetType().Name}"))
         };
 
-        // Log based on severity
+        /* Log the exception based on the status code */
         if (statusCode == HttpStatusCode.InternalServerError)
-        {
             _logger.LogError(exception, "Internal server error occurred: {Message}", exception.Message);
-        }
         else
-        {
             _logger.LogWarning("Client error ({StatusCode}): {Message}", (int)statusCode, exception.Message);
-        }
 
-        var response = new BaseResponse
+        /* Create the response */
+        BaseResponse response = new BaseResponse
         {
             Success = false,
-            Message = exception.Message,
+            Message = errorDetail.Message,
             ResponseCode = (int)statusCode,
-            Error = new ErrorDetail
-            {
-                Code = errorCode,
-                Message = exception.Message,
-                Details = details,
-                Timestamp = DateTime.UtcNow
-            }
+            Error = errorDetail
         };
 
+        /* Set the response content type and status code */
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)statusCode;
 
-        var jsonOptions = new JsonSerializerOptions
+        /* Serialize the response to JSON */
+        JsonSerializerOptions jsonOptions = new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
