@@ -1,7 +1,7 @@
-using StargateAPI.Domain;
-using StargateAPI.Domain.Exceptions;
 using System.Net;
 using System.Text.Json;
+using StargateAPI.Domain;
+using StargateAPI.Domain.Exceptions;
 
 namespace StargateAPI.Middleware;
 
