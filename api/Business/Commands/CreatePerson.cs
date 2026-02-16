@@ -3,6 +3,7 @@ using MediatR.Pipeline;
 using Microsoft.EntityFrameworkCore;
 using StargateAPI.Business.Data;
 using StargateAPI.Domain;
+using StargateAPI.Domain.Dtos;
 using StargateAPI.Domain.Exceptions;
 
 namespace StargateAPI.Business.Commands
@@ -59,7 +60,11 @@ namespace StargateAPI.Business.Commands
 
             return new CreatePersonResult()
             {
-                Id = newPerson.Id
+                Person = new PersonAstronaut
+                {
+                    PersonId = newPerson.Id,
+                    Name = newPerson.Name
+                }
             };
 
         }
@@ -67,6 +72,6 @@ namespace StargateAPI.Business.Commands
 
     public class CreatePersonResult : BaseResponse
     {
-        public int Id { get; set; }
+        public required PersonAstronaut Person { get; set; }
     }
 }
