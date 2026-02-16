@@ -26,12 +26,6 @@ namespace StargateAPI.Business.Commands
             if (string.IsNullOrWhiteSpace(request.Name))
                 throw new UnprocessableEntityException("Person name is required and cannot be empty.");
 
-            if (request.Name.Trim().Length < 2)
-                throw new UnprocessableEntityException("Person name must be at least 2 characters.");
-
-            if (request.Name.Length > 100)
-                throw new UnprocessableEntityException("Person name must be at most 100 characters.");
-
             if (_context.People.AsNoTracking().Any(z => z.Name == request.Name))
                 throw new UnprocessableEntityException("A person with this name already exists.");
 

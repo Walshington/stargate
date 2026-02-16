@@ -1,9 +1,8 @@
-using System.Net;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StargateAPI.Business.Commands;
 using StargateAPI.Business.Queries;
-using StargateAPI.Domain;
+using StargateAPI.Domain.Dtos;
 
 namespace StargateAPI.Controllers
 {
@@ -25,9 +24,15 @@ namespace StargateAPI.Controllers
         }
 
         [HttpPost("")]
-        public async Task<IActionResult> CreateAstronautDuty([FromBody] CreateAstronautDuty request)
+        public async Task<IActionResult> CreateAstronautDuty([FromBody] CreateAstronautDutyRequest request)
         {
-            var result = await _mediator.Send(request);
+            var result = await _mediator.Send(new CreateAstronautDuty
+            {
+                Name = request.Name,
+                Rank = request.Rank,
+                DutyTitle = request.DutyTitle,
+                DutyStartDate = request.DutyStartDate
+            });
             return this.GetResponse(result);
         }
     }

@@ -1,9 +1,9 @@
-using System.Net;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StargateAPI.Business.Commands;
 using StargateAPI.Business.Queries;
 using StargateAPI.Domain;
+using StargateAPI.Domain.Dtos;
 
 namespace StargateAPI.Controllers
 {
@@ -33,9 +33,9 @@ namespace StargateAPI.Controllers
         }
 
         [HttpPost("")]
-        public async Task<IActionResult> CreatePerson([FromBody] string name)
+        public async Task<IActionResult> CreatePerson([FromBody] CreatePersonRequest request)
         {
-            var result = await _mediator.Send(new CreatePerson { Name = name });
+            var result = await _mediator.Send(new CreatePerson { Name = request.Name });
             return this.GetResponse(result);
         }
     }
