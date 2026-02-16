@@ -3,7 +3,7 @@ using MediatR;
 using StargateAPI.Business.Data;
 using StargateAPI.Domain;
 using StargateAPI.Domain.Dtos;
-using System.Net;
+using StargateAPI.Domain.Exceptions;
 
 namespace StargateAPI.Business.Queries
 {
@@ -28,14 +28,7 @@ namespace StargateAPI.Business.Queries
 
             PersonAstronaut? person = await _context.Connection.QueryFirstOrDefaultAsync<PersonAstronaut>(query);
             if (person is null)
-            {
-                return new GetPersonByNameResult()
-                {
-                    Success = false,
-                    Message = "Person not found",
-                    ResponseCode = (int)HttpStatusCode.NotFound
-                };
-            }
+                throw new NotFoundException("Person not found");
 
             result.Person = person;
             return result;

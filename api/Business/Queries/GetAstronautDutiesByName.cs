@@ -3,7 +3,7 @@ using MediatR;
 using StargateAPI.Business.Data;
 using StargateAPI.Domain;
 using StargateAPI.Domain.Dtos;
-using System.Net;
+using StargateAPI.Domain.Exceptions;
 
 namespace StargateAPI.Business.Queries
 {
@@ -33,15 +33,7 @@ namespace StargateAPI.Business.Queries
             result.Person = person;
 
             if (person is null)
-            {
-                return new GetAstronautDutiesByNameResult()
-                {
-                    Success = false,
-                    Message = "Person not found",
-                    ResponseCode = (int)HttpStatusCode.NotFound,
-                    AstronautDuties = new List<AstronautDuty>()
-                };
-            }
+                throw new NotFoundException("Person not found");
 
             query = $"SELECT * FROM [AstronautDuty] WHERE {person.PersonId} = PersonId Order By DutyStartDate Desc";
 

@@ -4,7 +4,7 @@ using MediatR.Pipeline;
 using Microsoft.EntityFrameworkCore;
 using StargateAPI.Business.Data;
 using StargateAPI.Domain;
-using System.Net;
+using StargateAPI.Domain.Exceptions;
 
 namespace StargateAPI.Business.Commands
 {
@@ -32,11 +32,11 @@ namespace StargateAPI.Business.Commands
         {
             var person = _context.People.AsNoTracking().FirstOrDefault(z => z.Name == request.Name);
 
-            if (person is null) throw new BadHttpRequestException("Bad Request");
+            if (person is null) throw new NotFoundException("Person not found");
 
             var verifyNoPreviousDuty = _context.AstronautDuties.FirstOrDefault(z => z.DutyTitle == request.DutyTitle && z.DutyStartDate == request.DutyStartDate);
 
-            if (verifyNoPreviousDuty is not null) throw new BadHttpRequestException("Bad Request");
+            if (verifyNoPreviousDuty is not null) throw new BadRequestException("Duplicate duty exists");
 
             return Task.CompletedTask;
         }
