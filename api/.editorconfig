@@ -21,3 +21,7 @@ csharp_new_line_before_finally = true
 # Organize usings
 dotnet_sort_system_directives_first = true
 dotnet_separate_import_directive_groups = false
+
+# EF Core generated migrations - some tools skip formatting when generated_code = true
+[**/Migrations/*.cs]
+generated_code = true
