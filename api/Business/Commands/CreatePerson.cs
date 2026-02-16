@@ -1,8 +1,10 @@
+using System.Net;
 using MediatR;
 using MediatR.Pipeline;
 using Microsoft.EntityFrameworkCore;
 using StargateAPI.Business.Data;
 using StargateAPI.Domain;
+using StargateAPI.Domain.Dtos;
 using StargateAPI.Domain.Exceptions;
 
 namespace StargateAPI.Business.Commands
@@ -21,9 +23,17 @@ namespace StargateAPI.Business.Commands
         }
         public Task Process(CreatePerson request, CancellationToken cancellationToken)
         {
-            var person = _context.People.AsNoTracking().FirstOrDefault(z => z.Name == request.Name);
+            if (string.IsNullOrWhiteSpace(request.Name))
+                throw new UnprocessableEntityException("Person name is required and cannot be empty.");
 
-            if (person is not null) throw new BadRequestException("Person already exists");
+            if (request.Name.Trim().Length < 2)
+                throw new UnprocessableEntityException("Person name must be at least 2 characters.");
+
+            if (request.Name.Length > 100)
+                throw new UnprocessableEntityException("Person name must be at most 100 characters.");
+
+            if (_context.People.AsNoTracking().Any(z => z.Name == request.Name))
+                throw new UnprocessableEntityException("A person with this name already exists.");
 
             return Task.CompletedTask;
         }
@@ -51,7 +61,12 @@ namespace StargateAPI.Business.Commands
 
             return new CreatePersonResult()
             {
-                Id = newPerson.Id
+                ResponseCode = (int)HttpStatusCode.Created,
+                Person = new PersonAstronaut
+                {
+                    PersonId = newPerson.Id,
+                    Name = newPerson.Name
+                }
             };
 
         }
@@ -59,6 +74,6 @@ namespace StargateAPI.Business.Commands
 
     public class CreatePersonResult : BaseResponse
     {
-        public int Id { get; set; }
+        public required PersonAstronaut Person { get; set; }
     }
 }

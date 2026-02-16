@@ -36,6 +36,7 @@ public class ExceptionHandlingMiddleware
         {
             NotFoundException => (HttpStatusCode.NotFound, ErrorDetail.Create("NOT_FOUND", exception.Message, null)),
             BadRequestException => (HttpStatusCode.BadRequest, ErrorDetail.Create("BAD_REQUEST", exception.Message, null)),
+            UnprocessableEntityException => (HttpStatusCode.UnprocessableEntity, ErrorDetail.Create("UNPROCESSABLE_ENTITY", exception.Message, null)),
             BadHttpRequestException => (HttpStatusCode.BadRequest, ErrorDetail.Create("BAD_REQUEST", exception.Message, null)),
             _ => (HttpStatusCode.InternalServerError, ErrorDetail.Create("INTERNAL_ERROR", exception.Message, $"Exception type: {exception.GetType().Name}"))
         };
@@ -46,11 +47,9 @@ public class ExceptionHandlingMiddleware
         else
             _logger.LogWarning("Client error ({StatusCode}): {Message}", (int)statusCode, exception.Message);
 
-        /* Create the response */
         BaseResponse response = new BaseResponse
         {
             Success = false,
-            Message = errorDetail.Message,
             ResponseCode = (int)statusCode,
             Error = errorDetail
         };
