@@ -56,6 +56,8 @@ namespace StargateAPI.Business.Commands
             var query = $"SELECT * FROM [Person] WHERE \'{request.Name}\' = Name";
 
             var person = await _context.Connection.QueryFirstOrDefaultAsync<Person>(query);
+            if (person is null)
+                throw new BadHttpRequestException("Bad Request");
 
             query = $"SELECT * FROM [AstronautDetail] WHERE {person.Id} = PersonId";
 

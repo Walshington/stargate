@@ -3,6 +3,7 @@ using MediatR;
 using StargateAPI.Business.Data;
 using StargateAPI.Domain;
 using StargateAPI.Domain.Dtos;
+using System.Net;
 
 namespace StargateAPI.Business.Queries
 {
@@ -31,6 +32,17 @@ namespace StargateAPI.Business.Queries
 
             result.Person = person;
 
+            if (person is null)
+            {
+                return new GetAstronautDutiesByNameResult()
+                {
+                    Success = false,
+                    Message = "Person not found",
+                    ResponseCode = (int)HttpStatusCode.NotFound,
+                    AstronautDuties = new List<AstronautDuty>()
+                };
+            }
+
             query = $"SELECT * FROM [AstronautDuty] WHERE {person.PersonId} = PersonId Order By DutyStartDate Desc";
 
             var duties = await _context.Connection.QueryAsync<AstronautDuty>(query);
@@ -44,7 +56,7 @@ namespace StargateAPI.Business.Queries
 
     public class GetAstronautDutiesByNameResult : BaseResponse
     {
-        public PersonAstronaut Person { get; set; }
+        public PersonAstronaut? Person { get; set; }
         public List<AstronautDuty> AstronautDuties { get; set; } = new List<AstronautDuty>();
     }
 }
