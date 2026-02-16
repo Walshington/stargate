@@ -30,7 +30,7 @@ namespace StargateAPI.Business.Commands
 
         public Task Process(CreateAstronautDuty request, CancellationToken cancellationToken)
         {
-            var person = _context.People.AsNoTracking().FirstOrDefault(z => z.Name == request.Name);
+            var person = _context.People.AsNoTracking().FirstOrDefault(z => z.Name.ToLower() == request.Name.ToLower());
 
             if (person is null) throw new NotFoundException("Person not found");
 
@@ -53,15 +53,13 @@ namespace StargateAPI.Business.Commands
         public async Task<CreateAstronautDutyResult> Handle(CreateAstronautDuty request, CancellationToken cancellationToken)
         {
 
-            var query = $"SELECT * FROM [Person] WHERE \'{request.Name}\' = Name";
-
-            var person = await _context.Connection.QueryFirstOrDefaultAsync<Person>(query);
+            const string personQuery = "SELECT * FROM [Person] WHERE LOWER(Name) = LOWER(@name)";
+            var person = await _context.Connection.QueryFirstOrDefaultAsync<Person>(personQuery, new { name = request.Name });
             if (person is null)
                 throw new NotFoundException("Person not found");
 
-            query = $"SELECT * FROM [AstronautDetail] WHERE {person.Id} = PersonId";
-
-            var astronautDetail = await _context.Connection.QueryFirstOrDefaultAsync<AstronautDetail>(query);
+            const string astronautDetailQuery = "SELECT * FROM [AstronautDetail] WHERE @personId = PersonId";
+            var astronautDetail = await _context.Connection.QueryFirstOrDefaultAsync<AstronautDetail>(astronautDetailQuery, new { personId = person.Id });
 
             if (astronautDetail == null)
             {
@@ -89,9 +87,8 @@ namespace StargateAPI.Business.Commands
                 _context.AstronautDetails.Update(astronautDetail);
             }
 
-            query = $"SELECT * FROM [AstronautDuty] WHERE {person.Id} = PersonId Order By DutyStartDate Desc";
-
-            var astronautDuty = await _context.Connection.QueryFirstOrDefaultAsync<AstronautDuty>(query);
+            const string astronautDutyQuery = "SELECT * FROM [AstronautDuty] WHERE @personId = PersonId Order By DutyStartDate Desc";
+            var astronautDuty = await _context.Connection.QueryFirstOrDefaultAsync<AstronautDuty>(astronautDutyQuery, new { personId = person.Id });
 
             if (astronautDuty != null)
             {

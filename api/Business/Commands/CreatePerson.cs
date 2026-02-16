@@ -26,7 +26,7 @@ namespace StargateAPI.Business.Commands
             if (string.IsNullOrWhiteSpace(request.Name))
                 throw new UnprocessableEntityException("Person name is required and cannot be empty.");
 
-            if (_context.People.AsNoTracking().Any(z => z.Name == request.Name))
+            if (_context.People.AsNoTracking().Any(z => z.Name.ToLower() == request.Name.ToLower()))
                 throw new UnprocessableEntityException("A person with this name already exists.");
 
             return Task.CompletedTask;
