@@ -46,7 +46,7 @@ namespace StargateAPI.Business.Commands
             var verifyNoPreviousDuty = _context.AstronautDuties.FirstOrDefault(z =>
                 z.DutyTitle == request.DutyTitle && z.DutyStartDate.Date == request.DutyStartDate.Date);
 
-            if (verifyNoPreviousDuty is not null) 
+            if (verifyNoPreviousDuty is not null)
                 throw new ConflictException("A duty with the same title and start date already exists.");
 
             return Task.CompletedTask;
