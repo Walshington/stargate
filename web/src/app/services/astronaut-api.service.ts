@@ -18,7 +18,7 @@ export class AstronautApiService {
     );
   }
 
-  private handleError(error: HttpErrorResponse): Observable<never> {
+  private handleError = (error: HttpErrorResponse): Observable<never> => {
     let errorMessage = 'An error occurred while fetching astronaut data.';
     
     if (error.status === 404) {
@@ -30,5 +30,5 @@ export class AstronautApiService {
     }
     
     return throwError(() => new Error(errorMessage));
-  }
+  };
 }

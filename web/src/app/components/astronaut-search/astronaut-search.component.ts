@@ -15,12 +15,12 @@ export class AstronautSearchComponent {
   searchName = signal('');
   astronautSearched = output<string>();
 
-  isSearchDisabled = computed(() => {
+  protected readonly isSearchDisabled = computed(() => {
     const name = this.searchName().trim();
     return name.length === 0;
   });
 
-  onSearch(): void {
+  protected onSearch(): void {
     const name = this.searchName().trim();
     if (name) {
       this.astronautSearched.emit(name);

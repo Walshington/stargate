@@ -13,14 +13,14 @@ import { PersonAstronaut, AstronautDuty } from '../../models/astronaut.model';
   styleUrl: './astronaut-duty-list.component.scss',
 })
 export class AstronautDutyListComponent {
-  person = input<PersonAstronaut | null>(null);
-  duties = input<AstronautDuty[]>([]);
+  readonly person = input<PersonAstronaut | null>(null);
+  readonly duties = input<AstronautDuty[]>([]);
 
-  activeDuty = computed(() => 
+  protected readonly activeDuty = computed(() => 
     this.duties().find(duty => !duty.dutyEndDate)
   );
 
-  inactiveDuties = computed(() => 
+  protected readonly inactiveDuties = computed(() => 
     this.duties().filter(duty => duty.dutyEndDate)
   );
 }
