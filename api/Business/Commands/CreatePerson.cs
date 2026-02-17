@@ -56,7 +56,7 @@ namespace StargateAPI.Business.Commands
             return new CreatePersonResult()
             {
                 ResponseCode = (int)HttpStatusCode.Created,
-                Person = new PersonAstronaut
+                Person = new PersonAstronautDto
                 {
                     PersonId = newPerson.Id,
                     Name = newPerson.Name
@@ -68,6 +68,6 @@ namespace StargateAPI.Business.Commands
 
     public class CreatePersonResult : BaseResponse
     {
-        public required PersonAstronaut Person { get; set; }
+        public required PersonAstronautDto Person { get; set; }
     }
 }

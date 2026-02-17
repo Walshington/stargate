@@ -25,7 +25,7 @@ namespace StargateAPI.Business.Queries
             var result = new GetPersonByNameResult();
 
             const string query = "SELECT a.Id as PersonId, a.Name, b.CurrentRank, b.CurrentDutyTitle, b.CareerStartDate, b.CareerEndDate FROM [Person] a LEFT JOIN [AstronautDetail] b on b.PersonId = a.Id WHERE LOWER(a.Name) = LOWER(@name)";
-            PersonAstronaut? person = await _context.Connection.QueryFirstOrDefaultAsync<PersonAstronaut>(query, new { name = request.Name });
+            PersonAstronautDto? person = await _context.Connection.QueryFirstOrDefaultAsync<PersonAstronautDto>(query, new { name = request.Name });
             if (person is null)
                 throw new NotFoundException("Person not found");
 
@@ -36,6 +36,6 @@ namespace StargateAPI.Business.Queries
 
     public class GetPersonByNameResult : BaseResponse
     {
-        public PersonAstronaut? Person { get; set; }
+        public PersonAstronautDto? Person { get; set; }
     }
 }
