@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule],
   host: {
-    'class': 'astronaut-search',
+    class: 'astronaut-search',
   },
   templateUrl: './astronaut-search.component.html',
   styleUrl: './astronaut-search.component.scss',

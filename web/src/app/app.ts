@@ -10,24 +10,24 @@ import { AstronautDutiesResponse, PersonAstronaut, AstronautDuty } from './model
   selector: 'app-root',
   imports: [RouterOutlet, AstronautSearchComponent, AstronautDutyListComponent],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
 })
 export class App {
   private readonly astronautApiService = inject(AstronautApiService);
   private readonly destroyRef = inject(DestroyRef);
-  
+
   protected readonly title = signal('Stargate - Astronaut Career Tracking System');
   protected readonly searchResults = signal<AstronautDutiesResponse | null>(null);
   protected readonly isLoading = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
 
   // Computed signals for cleaner template
-  protected readonly person = computed<PersonAstronaut | null>(() => 
-    this.searchResults()?.person ?? null
+  protected readonly person = computed<PersonAstronaut | null>(
+    () => this.searchResults()?.person ?? null,
   );
 
-  protected readonly duties = computed<AstronautDuty[]>(() => 
-    this.searchResults()?.astronautDuties ?? []
+  protected readonly duties = computed<AstronautDuty[]>(
+    () => this.searchResults()?.astronautDuties ?? [],
   );
 
   protected handleSearch(name: string): void {
@@ -46,7 +46,7 @@ export class App {
         error: (error: Error) => {
           this.errorMessage.set(error.message);
           this.isLoading.set(false);
-        }
+        },
       });
   }
 }
