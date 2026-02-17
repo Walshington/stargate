@@ -36,6 +36,7 @@ public class ExceptionHandlingMiddleware
         {
             NotFoundException => (HttpStatusCode.NotFound, ErrorDetail.Create("NOT_FOUND", exception.Message, null)),
             BadRequestException => (HttpStatusCode.BadRequest, ErrorDetail.Create("BAD_REQUEST", exception.Message, null)),
+            ConflictException => (HttpStatusCode.Conflict, ErrorDetail.Create("CONFLICT", exception.Message, null)),
             UnprocessableEntityException => (HttpStatusCode.UnprocessableEntity, ErrorDetail.Create("UNPROCESSABLE_ENTITY", exception.Message, null)),
             BadHttpRequestException => (HttpStatusCode.BadRequest, ErrorDetail.Create("BAD_REQUEST", exception.Message, null)),
             _ => (HttpStatusCode.InternalServerError, ErrorDetail.Create("INTERNAL_ERROR", exception.Message, $"Exception type: {exception.GetType().Name}"))

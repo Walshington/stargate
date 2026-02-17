@@ -26,13 +26,7 @@ namespace StargateAPI.Business.Commands
             if (string.IsNullOrWhiteSpace(request.Name))
                 throw new UnprocessableEntityException("Person name is required and cannot be empty.");
 
-            if (request.Name.Trim().Length < 2)
-                throw new UnprocessableEntityException("Person name must be at least 2 characters.");
-
-            if (request.Name.Length > 100)
-                throw new UnprocessableEntityException("Person name must be at most 100 characters.");
-
-            if (_context.People.AsNoTracking().Any(z => z.Name == request.Name))
+            if (_context.People.AsNoTracking().Any(z => z.Name.ToLower() == request.Name.ToLower()))
                 throw new UnprocessableEntityException("A person with this name already exists.");
 
             return Task.CompletedTask;
@@ -62,7 +56,7 @@ namespace StargateAPI.Business.Commands
             return new CreatePersonResult()
             {
                 ResponseCode = (int)HttpStatusCode.Created,
-                Person = new PersonAstronaut
+                Person = new PersonAstronautDto
                 {
                     PersonId = newPerson.Id,
                     Name = newPerson.Name
@@ -74,6 +68,6 @@ namespace StargateAPI.Business.Commands
 
     public class CreatePersonResult : BaseResponse
     {
-        public required PersonAstronaut Person { get; set; }
+        public required PersonAstronautDto Person { get; set; }
     }
 }
