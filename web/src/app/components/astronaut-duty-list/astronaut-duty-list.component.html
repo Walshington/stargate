@@ -1,0 +1,89 @@
+@if (person(); as astronaut) {
+  <div class="duty-list-container">
+    <div class="astronaut-header">
+      <h2 class="astronaut-name">{{ astronaut.name }}</h2>
+      <div class="astronaut-info">
+        @if (astronaut.currentRank) {
+          <span class="info-badge">{{ astronaut.currentRank }}</span>
+        }
+        @if (astronaut.currentDutyTitle) {
+          <span class="info-badge">{{ astronaut.currentDutyTitle }}</span>
+        }
+      </div>
+      @if (astronaut.careerStartDate) {
+        <div class="career-dates">
+          <span class="career-label">Career:</span>
+          <span class="career-value">
+            {{ astronaut.careerStartDate | date: 'mediumDate' }}
+            @if (astronaut.careerEndDate) {
+              <span> - {{ astronaut.careerEndDate | date: 'mediumDate' }}</span>
+            } @else {
+              <span> - Present</span>
+            }
+          </span>
+        </div>
+      }
+    </div>
+
+    @if (duties().length === 0) {
+      <div class="no-duties-message" role="status">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="48"
+          height="48"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <p>This person does not currently have any active astronaut duties.</p>
+      </div>
+    } @else {
+      <div class="duties-section">
+        <h3 class="section-title">Duty History</h3>
+        <div class="duties-grid">
+          @if (activeDuty(); as active) {
+            <div class="duty-card active-duty">
+              <div class="duty-badge active-badge">Active Duty</div>
+              <div class="duty-content">
+                <h4 class="duty-title">{{ active.dutyTitle }}</h4>
+                <p class="duty-rank">{{ active.rank }}</p>
+                <div class="duty-dates">
+                  <span class="date-label">Started:</span>
+                  <span class="date-value">{{ active.dutyStartDate | date: 'mediumDate' }}</span>
+                </div>
+              </div>
+            </div>
+          }
+
+          @for (duty of inactiveDuties(); track duty.id) {
+            <div class="duty-card">
+              <div class="duty-badge">Past Duty</div>
+              <div class="duty-content">
+                <h4 class="duty-title">{{ duty.dutyTitle }}</h4>
+                <p class="duty-rank">{{ duty.rank }}</p>
+                <div class="duty-dates">
+                  <div class="date-row">
+                    <span class="date-label">Started:</span>
+                    <span class="date-value">{{ duty.dutyStartDate | date: 'mediumDate' }}</span>
+                  </div>
+                  <div class="date-row">
+                    <span class="date-label">Ended:</span>
+                    <span class="date-value">{{ duty.dutyEndDate | date: 'mediumDate' }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+}
