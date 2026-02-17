@@ -26,15 +26,33 @@ The API uses a **MediatR-based CQRS-style** split: controllers handle HTTP only;
 
 Controllers do **not** reference handlers or `StargateContext` directly. Adding a new feature means adding a new request + handler (and optionally pre-processors); controllers stay thin.
 
+**Note:** The actual execution flow includes:
+- **ExceptionHandlingMiddleware** wraps the entire request pipeline
+- **LoggingBehavior** automatically intercepts all MediatR requests to log them before/after handler execution
+- **Pre-processors** run before the handler for validation and setup
+-  Handler exceptions are logged by LoggingBehavior, then re-thrown and caught by ExceptionHandlingMiddleware for HTTP-level logging
+
+### Logging Architecture
+
+All API operations are automatically logged to both console and database:
+
+- **LoggingBehavior** (MediatR pipeline): Captures all command/query executions with request data, response data, duration, and status codes. Logs exceptions with full MediatR context before re-throwing.
+- **ExceptionHandlingMiddleware** (HTTP layer): Catches exceptions that bubble up, logs them with HTTP context (method, path, error response), and returns standardized error responses.
+- **IApiLoggingService**: Decoupled service that persists logs to the `ApiLog` table using isolated `DbContext` instances to ensure logs survive transaction rollbacks.
+- **Dual logging**: Both console (via `ILogger`) and database persistence happen in the same service for complete observability.
+
 ### Directory layout (`stargate/api/`)
 
 | Area | Purpose |
 |------|--------|
-| **Domain/** | Shared API contracts: `BaseResponse`, DTOs (e.g. `PersonAstronaut` under `Domain/Dtos/`). No dependencies on Controllers or Business. |
+| **Domain/** | Shared API contracts: `BaseResponse`, DTOs (e.g. `PersonAstronaut` under `Domain/Dtos/`), custom exceptions. No dependencies on Controllers or Business. |
 | **Controllers/** | HTTP only: routing, `Send(request)`, `GetResponse(result)`. No business or data logic. |
-| **Business/Data** | EF Core `StargateContext`, entities (`Person`, `AstronautDetail`, `AstronautDuty`), migrations. |
+| **Middleware/** | Cross-cutting concerns: `ExceptionHandlingMiddleware` for centralized exception handling and logging. |
+| **Business/Data** | EF Core `StargateContext`, entities (`Person`, `AstronautDetail`, `AstronautDuty`, `ApiLog`), migrations. |
 | **Business/Queries** | Read operations: request + handler + result type (e.g. `GetPersonByName`, `GetPeople`, `GetAstronautDutiesByName`). |
 | **Business/Commands** | Write operations: request + optional pre-processors + handler + result (e.g. `CreatePerson`, `CreateAstronautDuty`). |
+| **Business/Behaviors** | MediatR pipeline behaviors: `LoggingBehavior` for automatic request/response logging. |
+| **Business/Services** | Cross-cutting services: `IApiLoggingService` for database-backed logging with transaction isolation. |
 
 ---
 
@@ -99,6 +117,8 @@ dotnet run
 ## Guidance for agents
 
 - **Follow existing patterns:** New use cases = new request + handler (and result type). Controllers only `Send` and `GetResponse`. Don’t put business or data access in controllers.
-- **Where to add code:** New queries → `Business/Queries/`. New commands → `Business/Commands/`. New response shapes → extend `BaseResponse` or add DTOs under `Domain/Dtos/`. New endpoints → add actions to the appropriate controller and a corresponding request/handler.
-- **Testing:** Controllers can be tested by mocking `IMediator`. Handlers can be tested in isolation with a real or fake `StargateContext`. The MediatR split is intended to make both easy.
-- **Frontend:** An Angular frontend is planned but not in the repo yet. Do not assume or create frontend paths unless the user asks for them.
+- **Where to add code:** New queries → `Business/Queries/`. New commands → `Business/Commands/`. New response shapes → extend `BaseResponse` or add DTOs under `Domain/Dtos/`. New endpoints → add actions to the appropriate controller and a corresponding request/handler. New cross-cutting concerns → `Business/Services/` or `Business/Behaviors/`.
+- **Logging:** All MediatR requests are automatically logged. No manual logging needed in handlers. If adding new pipeline concerns, follow the `LoggingBehavior` pattern using `IPipelineBehavior`.
+- **Exception handling:** Throw domain exceptions (`NotFoundException`, `ConflictException`, `BadRequestException`, `UnprocessableEntityException`) from handlers. The middleware will convert them to appropriate HTTP responses and log them automatically.
+- **Testing:** Services like `IApiLoggingService` can be mocked for unit tests. The MediatR split and service abstraction are intended to make testing easy.
+- **Frontend:** An Angular frontend is planned but not in the repo yet. Do not assume or create frontend paths unless the user asks for them. API responses use camelCase JSON for JavaScript compatibility.

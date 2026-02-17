@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using StargateAPI.Business.Services;
 using StargateAPI.Domain;
 using StargateAPI.Domain.Exceptions;
 
@@ -42,18 +43,44 @@ public class ExceptionHandlingMiddleware
             _ => (HttpStatusCode.InternalServerError, ErrorDetail.Create("INTERNAL_ERROR", exception.Message, $"Exception type: {exception.GetType().Name}"))
         };
 
-        /* Log the exception based on the status code */
+        /* Log exception based on severity */
         if (statusCode == HttpStatusCode.InternalServerError)
             _logger.LogError(exception, "Internal server error occurred: {Message}", exception.Message);
         else
             _logger.LogWarning("Client error ({StatusCode}): {Message}", (int)statusCode, exception.Message);
 
+        /* Build the error response that will be sent to the client */
         BaseResponse response = new BaseResponse
         {
             Success = false,
             ResponseCode = (int)statusCode,
             Error = errorDetail
         };
+
+        /*
+         * Log exception to database with HTTP context and error response.
+         * Request data contains HTTP context (method, path, query).
+         * Response data contains the actual error response sent to the client.
+         */
+        try
+        {
+            var loggingService = context.RequestServices.GetRequiredService<IApiLoggingService>();
+
+            // Build HTTP context information for request data
+            var httpContext = new
+            {
+                Method = context.Request.Method,
+                Path = context.Request.Path.Value,
+                QueryString = context.Request.QueryString.Value
+            };
+
+            await loggingService.LogExceptionAsync("HTTP_REQUEST", httpContext, exception, 0, (int)statusCode, response);
+        }
+        catch (Exception logEx)
+        {
+            /* Fail-safe: Don't let logging failures break exception handling */
+            _logger.LogError(logEx, "Failed to log exception to database");
+        }
 
         /* Set the response content type and status code */
         context.Response.ContentType = "application/json";
