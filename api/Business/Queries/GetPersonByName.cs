@@ -22,20 +22,17 @@ namespace StargateAPI.Business.Queries
 
         public async Task<GetPersonByNameResult> Handle(GetPersonByName request, CancellationToken cancellationToken)
         {
-            var result = new GetPersonByNameResult();
-
             const string query = "SELECT a.Id as PersonId, a.Name, b.CurrentRank, b.CurrentDutyTitle, b.CareerStartDate, b.CareerEndDate FROM [Person] a LEFT JOIN [AstronautDetail] b on b.PersonId = a.Id WHERE LOWER(a.Name) = LOWER(@name)";
-            PersonAstronautDto? person = await _context.Connection.QueryFirstOrDefaultAsync<PersonAstronautDto>(query, new { name = request.Name });
+            var person = await _context.Connection.QueryFirstOrDefaultAsync<PersonAstronautDto>(query, new { name = request.Name });
             if (person is null)
                 throw new NotFoundException("Person not found");
 
-            result.Person = person;
-            return result;
+            return new GetPersonByNameResult { Person = person };
         }
     }
 
     public class GetPersonByNameResult : BaseResponse
     {
-        public PersonAstronautDto? Person { get; set; }
+        public required PersonAstronautDto Person { get; set; }
     }
 }

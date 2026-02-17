@@ -20,21 +20,16 @@ namespace StargateAPI.Business.Queries
         }
         public async Task<GetPeopleResult> Handle(GetPeople request, CancellationToken cancellationToken)
         {
-            var result = new GetPeopleResult();
-
-            var query = $"SELECT a.Id as PersonId, a.Name, b.CurrentRank, b.CurrentDutyTitle, b.CareerStartDate, b.CareerEndDate FROM [Person] a LEFT JOIN [AstronautDetail] b on b.PersonId = a.Id";
-
+            const string query = "SELECT a.Id as PersonId, a.Name, b.CurrentRank, b.CurrentDutyTitle, b.CareerStartDate, b.CareerEndDate FROM [Person] a LEFT JOIN [AstronautDetail] b on b.PersonId = a.Id";
             var people = await _context.Connection.QueryAsync<PersonAstronautDto>(query);
 
-            result.People = people.ToList();
-
-            return result;
+            return new GetPeopleResult { People = [.. people] };
         }
     }
 
     public class GetPeopleResult : BaseResponse
     {
-        public List<PersonAstronautDto> People { get; set; } = new List<PersonAstronautDto> { };
+        public required List<PersonAstronautDto> People { get; set; }
 
     }
 }
