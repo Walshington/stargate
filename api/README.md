@@ -57,3 +57,38 @@ Run static analysis and check for warnings:
 ```powershell
 dotnet build
 ```
+
+## Logging
+
+The API implements comprehensive database-backed logging that captures all requests, responses, and exceptions for audit and debugging purposes.
+
+### How It Works
+
+**Automatic Request/Response Logging:**
+- Every MediatR command and query is automatically logged via `LoggingBehavior` pipeline behavior
+- Captures request data, response data, execution duration, and HTTP status codes
+- No manual logging code needed in handlers
+
+**Exception Logging:**
+- MediatR handler exceptions logged by `LoggingBehavior` with full request context
+- HTTP-level exceptions logged by `ExceptionHandlingMiddleware` with HTTP context (method, path, error response)
+- Pre-processor validation exceptions only logged at HTTP level (MediatR limitation)
+
+**Dual Output:**
+- **Console/Debug:** All requests and exceptions logged via ASP.NET Core's `ILogger` for real-time monitoring
+- **Database:** All logs persisted to `ApiLog` table for queryable audit trail
+
+**Transaction Isolation:**
+- Logging uses separate `DbContext` instances to ensure logs persist even when business transactions roll back
+- SQLite WAL mode enabled for concurrent write support
+
+### Querying Logs
+
+Logs are stored in the `ApiLog` table with the following key fields:
+- `RequestType`: MediatR request name (e.g., "CreatePerson") or "HTTP_REQUEST" for middleware logs
+- `RequestData`: Serialized request object (JSON)
+- `ResponseData`: Serialized response object (JSON)
+- `StatusCode`: HTTP status code
+- `DurationMs`: Execution time in milliseconds
+- `ExceptionMessage` / `ExceptionStackTrace`: Present for error logs
+- `Level`: "Information" for success, "Error" for exceptions
