@@ -20,5 +20,5 @@ public class CreateAstronautDutyRequest
     public string DutyTitle { get; set; } = string.Empty;
 
     [Required]
-    public DateTime DutyStartDate { get; set; }
+    public DateTime DutyStartDate { get; set; } = DateTime.UtcNow;
 }
