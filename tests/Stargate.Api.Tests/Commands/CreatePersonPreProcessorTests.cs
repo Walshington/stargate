@@ -14,7 +14,7 @@ namespace Stargate.Api.Tests.Commands
             // Arrange
             var mockContext = new Mock<StargateContext>(
                 new Microsoft.EntityFrameworkCore.DbContextOptions<StargateContext>());
-            
+
             var mockPeopleDbSet = MockDbSetHelper.CreateEmptyMockDbSet<Person>();
             mockContext.Setup(c => c.People).Returns(mockPeopleDbSet.Object);
 
@@ -35,7 +35,7 @@ namespace Stargate.Api.Tests.Commands
             // Arrange
             var mockContext = new Mock<StargateContext>(
                 new Microsoft.EntityFrameworkCore.DbContextOptions<StargateContext>());
-            
+
             var mockPeopleDbSet = MockDbSetHelper.CreateEmptyMockDbSet<Person>();
             mockContext.Setup(c => c.People).Returns(mockPeopleDbSet.Object);
 
@@ -60,7 +60,7 @@ namespace Stargate.Api.Tests.Commands
             };
 
             var mockPeopleDbSet = MockDbSetHelper.CreateMockDbSet(existingPeople);
-            
+
             var mockContext = new Mock<StargateContext>(
                 new Microsoft.EntityFrameworkCore.DbContextOptions<StargateContext>());
             mockContext.Setup(c => c.People).Returns(mockPeopleDbSet.Object);
@@ -86,7 +86,7 @@ namespace Stargate.Api.Tests.Commands
             };
 
             var mockPeopleDbSet = MockDbSetHelper.CreateMockDbSet(existingPeople);
-            
+
             var mockContext = new Mock<StargateContext>(
                 new Microsoft.EntityFrameworkCore.DbContextOptions<StargateContext>());
             mockContext.Setup(c => c.People).Returns(mockPeopleDbSet.Object);

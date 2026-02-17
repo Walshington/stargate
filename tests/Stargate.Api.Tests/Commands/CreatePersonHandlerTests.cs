@@ -15,22 +15,22 @@ namespace Stargate.Api.Tests.Commands
         {
             // Arrange
             var mockPeopleDbSet = MockDbSetHelper.CreateEmptyMockDbSet<Person>();
-            
+
             var mockContext = new Mock<StargateContext>(
                 new DbContextOptions<StargateContext>());
             mockContext.Setup(c => c.People).Returns(mockPeopleDbSet.Object);
-            
+
             // Mock AddAsync to capture the added person
             Person? capturedPerson = null;
             mockPeopleDbSet
                 .Setup(m => m.AddAsync(It.IsAny<Person>(), It.IsAny<CancellationToken>()))
-                .Callback<Person, CancellationToken>((person, token) => 
+                .Callback<Person, CancellationToken>((person, token) =>
                 {
                     capturedPerson = person;
                     // Simulate database setting the Id
                     person.Id = 1;
                 })
-                .Returns((Person p, CancellationToken token) => 
+                .Returns((Person p, CancellationToken token) =>
                     new ValueTask<EntityEntry<Person>>(Task.FromResult<EntityEntry<Person>>(null!)));
 
             // Mock SaveChangesAsync
@@ -47,15 +47,15 @@ namespace Stargate.Api.Tests.Commands
             // Assert
             Assert.NotNull(capturedPerson);
             Assert.Equal("John Doe", capturedPerson.Name);
-            
+
             // Verify AddAsync was called
             mockPeopleDbSet.Verify(
-                m => m.AddAsync(It.IsAny<Person>(), It.IsAny<CancellationToken>()), 
+                m => m.AddAsync(It.IsAny<Person>(), It.IsAny<CancellationToken>()),
                 Times.Once);
-            
+
             // Verify SaveChangesAsync was called
             mockContext.Verify(
-                c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), 
+                c => c.SaveChangesAsync(It.IsAny<CancellationToken>()),
                 Times.Once);
         }
 
@@ -64,7 +64,7 @@ namespace Stargate.Api.Tests.Commands
         {
             // Arrange
             var mockPeopleDbSet = MockDbSetHelper.CreateEmptyMockDbSet<Person>();
-            
+
             var mockContext = new Mock<StargateContext>(
                 new DbContextOptions<StargateContext>());
             mockContext.Setup(c => c.People).Returns(mockPeopleDbSet.Object);
@@ -73,7 +73,7 @@ namespace Stargate.Api.Tests.Commands
             mockPeopleDbSet
                 .Setup(m => m.AddAsync(It.IsAny<Person>(), It.IsAny<CancellationToken>()))
                 .Callback<Person, CancellationToken>((person, token) => person.Id = 1)
-                .Returns((Person p, CancellationToken token) => 
+                .Returns((Person p, CancellationToken token) =>
                     new ValueTask<EntityEntry<Person>>(Task.FromResult<EntityEntry<Person>>(null!)));
 
             mockContext
@@ -98,7 +98,7 @@ namespace Stargate.Api.Tests.Commands
         {
             // Arrange
             var mockPeopleDbSet = MockDbSetHelper.CreateEmptyMockDbSet<Person>();
-            
+
             var mockContext = new Mock<StargateContext>(
                 new DbContextOptions<StargateContext>());
             mockContext.Setup(c => c.People).Returns(mockPeopleDbSet.Object);
@@ -106,7 +106,7 @@ namespace Stargate.Api.Tests.Commands
             mockPeopleDbSet
                 .Setup(m => m.AddAsync(It.IsAny<Person>(), It.IsAny<CancellationToken>()))
                 .Callback<Person, CancellationToken>((person, token) => person.Id = 42)
-                .Returns((Person p, CancellationToken token) => 
+                .Returns((Person p, CancellationToken token) =>
                     new ValueTask<EntityEntry<Person>>(Task.FromResult<EntityEntry<Person>>(null!)));
 
             mockContext
