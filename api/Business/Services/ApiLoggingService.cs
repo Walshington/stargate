@@ -23,7 +23,7 @@ namespace StargateAPI.Business.Services
         public async Task LogRequestAsync(string requestType, object request, object response, int statusCode, long durationMs)
         {
             /* Log successful request to console for debugging */
-            _logger.LogInformation("Request: {RequestType} completed in {Duration}ms with status {StatusCode}", 
+            _logger.LogInformation("Request: {RequestType} completed in {Duration}ms with status {StatusCode}",
                 requestType, durationMs, statusCode);
 
             try
@@ -71,7 +71,7 @@ namespace StargateAPI.Business.Services
         public async Task LogExceptionAsync(string requestType, object? request, Exception exception, long durationMs, int? statusCode = null, object? response = null)
         {
             /* Log exception to console for debugging */
-            _logger.LogError(exception, "Request: {RequestType} failed after {Duration}ms with status {StatusCode} - {ExceptionMessage}", 
+            _logger.LogError(exception, "Request: {RequestType} failed after {Duration}ms with status {StatusCode} - {ExceptionMessage}",
                 requestType, durationMs, statusCode, exception.Message);
 
             try
@@ -90,12 +90,12 @@ namespace StargateAPI.Business.Services
                     PropertyNamingPolicy = JsonNamingPolicy.CamelCase
                 };
 
-                var requestJson = request != null 
-                    ? JsonSerializer.Serialize(request, jsonOptions) 
+                var requestJson = request != null
+                    ? JsonSerializer.Serialize(request, jsonOptions)
                     : "null";
-                
-                var responseJson = response != null 
-                    ? JsonSerializer.Serialize(response, jsonOptions) 
+
+                var responseJson = response != null
+                    ? JsonSerializer.Serialize(response, jsonOptions)
                     : null;
 
                 /* Create log entry with exception details, request context, and error response */

@@ -46,7 +46,7 @@ namespace StargateAPI.Business.Behaviors
                  * Try to extract status code from exception if it's a domain exception with known status.
                  */
                 stopwatch.Stop();
-                
+
                 // Try to infer status code from exception type (matches middleware logic)
                 int? statusCode = ex switch
                 {
@@ -56,7 +56,7 @@ namespace StargateAPI.Business.Behaviors
                     UnprocessableEntityException => 422,
                     _ => 500
                 };
-                
+
                 await _loggingService.LogExceptionAsync(requestType, request, ex, stopwatch.ElapsedMilliseconds, statusCode);
                 throw;
             }

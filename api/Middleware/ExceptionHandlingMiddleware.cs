@@ -65,7 +65,7 @@ public class ExceptionHandlingMiddleware
         try
         {
             var loggingService = context.RequestServices.GetRequiredService<IApiLoggingService>();
-            
+
             // Build HTTP context information for request data
             var httpContext = new
             {
@@ -73,7 +73,7 @@ public class ExceptionHandlingMiddleware
                 Path = context.Request.Path.Value,
                 QueryString = context.Request.QueryString.Value
             };
-            
+
             await loggingService.LogExceptionAsync("HTTP_REQUEST", httpContext, exception, 0, (int)statusCode, response);
         }
         catch (Exception logEx)
