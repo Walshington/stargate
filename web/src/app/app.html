@@ -11,15 +11,15 @@
   </div>
 
   @if (isLoading()) {
-    <div class="loading-container">
-      <div class="spinner"></div>
+    <div class="loading-container" role="status" aria-live="polite">
+      <div class="spinner" aria-hidden="true"></div>
       <p class="loading-text">Searching for astronaut...</p>
     </div>
   }
 
   @if (errorMessage()) {
-    <div class="error-container">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <div class="error-container" role="alert" aria-live="assertive">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <circle cx="12" cy="12" r="10"></circle>
         <line x1="12" y1="8" x2="12" y2="12"></line>
         <line x1="12" y1="16" x2="12.01" y2="16"></line>
@@ -31,8 +31,8 @@
   @if (searchResults() && !isLoading()) {
     <div class="results-section">
       <app-astronaut-duty-list 
-        [person]="searchResults()!.person" 
-        [duties]="searchResults()!.astronautDuties"
+        [person]="person()" 
+        [duties]="duties()"
       />
     </div>
   }
