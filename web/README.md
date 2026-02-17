@@ -1,31 +1,68 @@
-# StargateWeb
+# Stargate Web
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.4.
+Angular frontend for the Stargate Astronaut Career Tracking System (ACTS).
 
-## Development server
+## Prerequisites
 
-To start a local development server, run:
+- Node.js (v18 or higher recommended)
+- npm (comes with Node.js)
+
+## Installation
+
+Install dependencies:
 
 ```bash
-ng serve
+npm install
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`.
+## Configuration
 
-## Building
+The application uses environment files to configure the API connection:
 
-To build the project run:
+- **Development** (`src/environments/environment.ts`): Configured for `http://localhost:5204`
+- **Production** (`src/environments/environment.prod.ts`): Update `apiBaseUrl` for your production deployment
+
+Edit these files directly to change the API base URL.
+
+## Development Server
+
+Run the development server:
 
 ```bash
-ng build
+npm start
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Running unit tests
+## Build
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Build the project:
 
 ```bash
-ng test
+npm run build
+```
+
+The build artifacts will be stored in the `dist/` directory. By default, builds use the production configuration.
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── components/           # UI components
+│   │   ├── astronaut-search/ # Search bar component
+│   │   └── astronaut-duty-list/ # Duty list component
+│   ├── models/              # TypeScript interfaces
+│   ├── services/            # API services
+│   └── app.*                # Root component
+├── environments/            # Environment configuration files
+└── styles.scss             # Global styles
+```
+
+## Running Tests
+
+Run unit tests:
+
+```bash
+npm test
 ```
