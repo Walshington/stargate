@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using StargateAPI.Business.Behaviors;
 using StargateAPI.Business.Commands;
 using StargateAPI.Business.Data;
+using StargateAPI.Business.Services;
 using StargateAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,10 +16,17 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<StargateContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("StarbaseApiDatabase")));
 
+/*
+ * Register logging service for database-backed API logging.
+ * Scoped lifetime ensures one instance per HTTP request.
+ */
+builder.Services.AddScoped<IApiLoggingService, ApiLoggingService>();
+
 builder.Services.AddMediatR(cfg =>
 {
     cfg.AddRequestPreProcessor<CreatePersonPreProcessor>();
     cfg.AddRequestPreProcessor<CreateAstronautDutyPreProcessor>();
+    cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
     cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly);
 });
 
