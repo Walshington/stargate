@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StargateAPI", "api\StargateAPI.csproj", "{DDC90656-0D4A-4700-BA94-2DCC3FB41316}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B59176FA-6E36-4244-BE72-5AB5207F80C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stargate.Api.Tests", "tests\Stargate.Api.Tests\Stargate.Api.Tests.csproj", "{BB10D74C-5EA3-484D-90F4-15014FB4CE36}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DDC90656-0D4A-4700-BA94-2DCC3FB41316}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDC90656-0D4A-4700-BA94-2DCC3FB41316}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDC90656-0D4A-4700-BA94-2DCC3FB41316}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDC90656-0D4A-4700-BA94-2DCC3FB41316}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB10D74C-5EA3-484D-90F4-15014FB4CE36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB10D74C-5EA3-484D-90F4-15014FB4CE36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB10D74C-5EA3-484D-90F4-15014FB4CE36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB10D74C-5EA3-484D-90F4-15014FB4CE36}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BB10D74C-5EA3-484D-90F4-15014FB4CE36} = {B59176FA-6E36-4244-BE72-5AB5207F80C2}
+	EndGlobalSection
+EndGlobal

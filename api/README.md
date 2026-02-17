@@ -36,6 +36,18 @@ The API will listen at **http://localhost:5204** (or the port shown in the conso
 
 ## Development
 
+### Testing
+
+API unit tests live in the `tests/Stargate.Api.Tests` project and are run from the solution root using the `Stargate.sln` solution file.
+
+From the `stargate` directory (solution root):
+
+```powershell
+dotnet test
+```
+
+This will build the API and execute all tests in `Stargate.Api.Tests`.
+
 ### Formatting
 
 Format the codebase using the built-in .NET formatter (respects `.editorconfig` rules):
