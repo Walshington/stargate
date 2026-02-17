@@ -1,4 +1,4 @@
-import { Component, signal, inject, computed } from '@angular/core';
+import { Component, signal, inject, computed, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from '@angular/router';
 import { AstronautSearchComponent } from './components/astronaut-search/astronaut-search.component';
@@ -14,7 +14,7 @@ import { AstronautDutiesResponse, PersonAstronaut, AstronautDuty } from './model
 })
 export class App {
   private readonly astronautApiService = inject(AstronautApiService);
-  private readonly destroyRef = takeUntilDestroyed();
+  private readonly destroyRef = inject(DestroyRef);
   
   protected readonly title = signal('Stargate - Astronaut Career Tracking System');
   protected readonly searchResults = signal<AstronautDutiesResponse | null>(null);
@@ -37,7 +37,7 @@ export class App {
 
     this.astronautApiService
       .getAstronautDutiesByName(name)
-      .pipe(this.destroyRef)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
           this.searchResults.set(response);
